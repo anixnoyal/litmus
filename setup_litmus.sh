@@ -3,7 +3,8 @@
 
 systemctl disable firewalld
 systemctl stop firewalld
-
+setenforce 0
+sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 
 dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 dnf repolist
@@ -12,6 +13,8 @@ dnf install docker-ce docker-ce-cli containerd.io -y
 systemctl enable --now docker
 usermod -aG docker $USER
 newgrp docker
+
+# kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 cp kubectl /usr/local/bin/ && sudo chmod +x /usr/local/bin/kubectl
 kubectl version --client
