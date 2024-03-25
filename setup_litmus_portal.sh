@@ -42,6 +42,10 @@ echo "Minikube installed successfully."
 
 # Start Minikube with Docker driver
 echo "Starting Minikube with Docker driver..."
+
+minikube start --docker-env HTTP_PROXY=$HTTP_PROXY --docker-env HTTPS_PROXY=$HTTPS_PROXY --docker-env NO_PROXY=$NO_PROXY --driver=docker  --force
+
+
 minikube start --driver=docker  --force
 minikube logs --file=logs.txt`
 minikube status
