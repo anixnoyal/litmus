@@ -1,18 +1,5 @@
 #!/bin/bash
 
-systemctl disable firewalld
-systemctl stop firewalld
-setenforce 0
-sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
-
-
-server_name="litmus-portal"
-echo "$server_name" | tee /etc/hostname
-hostnamectl set-hostname $server_name
-exit
-
-dnf install -y git
-
 # Install kubectl
 echo "Installing kubectl..."
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -24,15 +11,13 @@ echo "kubectl installed successfully."
 # Install Docker
 echo "Installing Docker..."
 dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-dnf install -y docker-ce --nobest
+dnf install -y docker-ce 
 
 usermod -aG docker $USER
 newgrp docker
 
 systemctl enable --now docker
 echo "Docker installed successfully."
-
-
 
 # Install Minikube
 echo "Installing Minikube..."
@@ -44,8 +29,6 @@ echo "Minikube installed successfully."
 # Start Minikube with Docker driver
 echo "Starting Minikube with Docker driver..."
 
-minikube start --docker-env HTTP_PROXY=$HTTP_PROXY --docker-env HTTPS_PROXY=$HTTPS_PROXY --docker-env NO_PROXY=$NO_PROXY --driver=docker  --force
-OR
 minikube start --driver=docker  --force
 
 minikube status
