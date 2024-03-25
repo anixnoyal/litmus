@@ -11,6 +11,8 @@ echo "$server_name" | tee /etc/hostname
 hostnamectl set-hostname $server_name
 exit
 
+dnf install -y git
+
 # Install kubectl
 echo "Installing kubectl..."
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -40,7 +42,8 @@ echo "Minikube installed successfully."
 
 # Start Minikube with Docker driver
 echo "Starting Minikube with Docker driver..."
-minikube start --driver=docker  -force
+minikube start --driver=docker  --force
+minikube logs --file=logs.txt`
 minikube status
 minikube ip
 kubectl cluster-info
@@ -54,14 +57,24 @@ echo "Helm installed successfully."
 # Add LitmusChaos Helm repository
 helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
 helm repo update
+helm repo list
+helm list
+helm search repo litmuschaos
 
 # Create a namespace for Litmus
 kubectl create namespace litmus
 
-# Install Litmus ChaosCenter
 
+
+helm install chaos litmuschaos/litmus --namespace=litmus --set portal.frontend.service.type=NodePort
+
+# Install Litmus core
 helm search repo litmuschaos
-helm install chaos litmuschaos/litmus -namespace litmus --create-namespace
+helm install chaos-core litmuschaos/litmus-core --namespace litmus --debug
+
+# Install Litmus ChaosCenter
+helm search repo litmuschaos
+helm install chaos litmuschaos/litmus --namespace litmus --debug
 echo "Litmus Chaos Portal installation complete."
 
 kubectl get svc -n litmus
@@ -69,6 +82,11 @@ kubectl port-forward svc/litmusportal-frontend-service -n litmus 9091:9091
 kubectl get all -n litmus
 
 
+
+## uninstall helm
+helm list --all-namespaces
+helm uninstall chaos-center -n litmus
+helm uninstall chaos-core -n litmus
 
 ## minikube config reset
 minikube stop
