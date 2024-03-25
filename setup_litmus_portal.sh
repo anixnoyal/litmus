@@ -97,3 +97,14 @@ minikube stop
 minikube delete
 docker system prune -a
 sudo systemctl restart docker
+
+{
+  "proxies": {
+    "default": {
+      "httpProxy": "http://proxy.example.com:8080",
+      "httpsProxy": "http://proxy.example.com:8080",
+      "noProxy": "localhost,127.0.0.1,.example.com"
+    }
+  }
+}
+
