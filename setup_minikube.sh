@@ -23,7 +23,7 @@ kubectl version --client
 
 # minikube
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
-sudo rpm -ivh minikube-latest.x86_64.rpm
+rpm -ivh minikube-latest.x86_64.rpm
 
 minikube start --driver=docker  --force
 
@@ -32,7 +32,6 @@ minikube ip
 
 kubectl cluster-info
 kubectl get nodes
-
 
 # test app
 kubectl create deployment test-minikube --image=k8s.gcr.io/echoserver:1.10
@@ -50,4 +49,4 @@ minikube dashboard --url
 minikube stop
 minikube delete
 docker system prune -a
-sudo systemctl restart docker
+systemctl stop docker
