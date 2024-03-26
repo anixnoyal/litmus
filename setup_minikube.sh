@@ -26,6 +26,7 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest
 sudo rpm -ivh minikube-latest.x86_64.rpm
 
 minikube start --driver=docker  --force
+
 minikube status
 minikube ip
 
