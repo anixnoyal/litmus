@@ -33,6 +33,19 @@ minikube ip
 kubectl cluster-info
 kubectl get nodes
 
+
+# test app
+kubectl create deployment test-minikube --image=k8s.gcr.io/echoserver:1.10
+kubectl expose deployment test-minikube --type=NodePort --port=8080
+kubectl get deployment,pods,svc
+minikube service test-minikube --url
+curl $from_above_url
+minikube addons list
+minikube addons enable dashboard
+minikube addons enable ingress
+#kubectl proxy –address=’0.0.0.0′ –disable-filter=true
+minikube dashboard --url
+
 ## minikube config reset
 minikube stop
 minikube delete
